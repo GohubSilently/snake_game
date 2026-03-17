@@ -2,39 +2,32 @@ from random import choice
 
 import pygame as pg
 
-# Константы для размеров поля и сетки:
-SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
-GRID_SIZE = 20
-GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
-GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
-CENTRAL_CELL = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+from constants import (
+    ALL_CELLS,
+    APPLE_COLOR,
+    BOARD_BACKGROUND_COLOR,
+    BORDER_COLOR,
+    CENTRAL_CELL,
+    DOWN,
+    GRID_HEIGHT,
+    GRID_SIZE,
+    GRID_WIDTH,
+    LEFT,
+    RIGHT,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    SNAKE_COLOR,
+    SPEED,
+    UP
+)
 
-ALL_CELLS = {
-    (x * GRID_SIZE, y * GRID_SIZE)
-    for x in range(GRID_WIDTH)
-    for y in range(GRID_HEIGHT)
-}
 
-# Константы движения и скорости:
-UP = (0, -1)
-DOWN = (0, 1)
-LEFT = (-1, 0)
-RIGHT = (1, 0)
-
-KEY_TO_DIRECTIONS = {
+MOVEMENT_SNAKE = {
     pg.K_UP: UP,
     pg.K_DOWN: DOWN,
     pg.K_LEFT: LEFT,
     pg.K_RIGHT: RIGHT,
 }
-
-SPEED = 10
-
-# Константы цвета:
-BOARD_BACKGROUND_COLOR = (128, 128, 128)
-BORDER_COLOR = (128, 128, 128)
-APPLE_COLOR = (255, 0, 0)
-SNAKE_COLOR = (0, 255, 0)
 
 # Настройка игрового окна:
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -43,8 +36,6 @@ clock = pg.time.Clock()
 
 
 class GameObject:
-    """Make the main class."""
-
     def __init__(
         self,
         body_color=None
@@ -55,7 +46,6 @@ class GameObject:
     def draw(
         self
     ):
-        """Raise the problem in under class."""
         raise NotImplementedError(
             f'Метод draw() не выполняется в {type(self).__name__}'
         )
@@ -65,19 +55,14 @@ class GameObject:
         position,
         body_color=None
     ):
-        """Draw one cell."""
         body_color = body_color or self.body_color
-
         rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, body_color, rect)
-
         if body_color != BOARD_BACKGROUND_COLOR:
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Apple(GameObject):
-    """Make new class Apple inhireted by GameObject."""
-
     def __init__(
         self,
         occupied_cells=CENTRAL_CELL,
@@ -90,19 +75,15 @@ class Apple(GameObject):
         self,
         occupied_cells
     ):
-        """Define the position of the apple"""
         self.position = choice(tuple(ALL_CELLS - set(occupied_cells)))
 
     def draw(
         self
     ):
-        """Draw the object of the apple"""
         self.draw_one_cell(self.position)
 
 
 class Snake(GameObject):
-    """Make new class Snake inhireted by GameObject."""
-
     def __init__(
         self,
         body_color=SNAKE_COLOR
@@ -113,13 +94,11 @@ class Snake(GameObject):
     def get_head_position(
         self
     ):
-        """Define the head of the snake."""
         return self.positions[0]
 
     def reset(
         self
     ):
-        """Reset the snake."""
         self.length = 1
         self.direction = choice([UP, DOWN, RIGHT, LEFT])
         self.positions = [CENTRAL_CELL]
@@ -129,7 +108,6 @@ class Snake(GameObject):
         self,
         new_position
     ):
-        """Update the directions."""
         if (
             new_position[0] != -self.direction[0]
             and new_position[1] != -self.direction[1]
@@ -139,7 +117,6 @@ class Snake(GameObject):
     def move(
         self
     ):
-        """The movement of the snake."""
         head_x, head_y = self.get_head_position()
         head_movement_x, head_movement_y = self.direction
 
@@ -157,14 +134,12 @@ class Snake(GameObject):
     def draw(
         self
     ):
-        """Draw the snake."""
         self.draw_one_cell(self.get_head_position())
         if self.last:
             self.draw_one_cell(self.last, BOARD_BACKGROUND_COLOR)
 
 
 def handle_keys(snake):
-    """Check the keybord."""
     for event in pg.event.get():
         if (
             event.type == pg.QUIT
@@ -179,7 +154,6 @@ def handle_keys(snake):
 
 
 def main():
-    """Start the game."""
     pg.init()
 
     snake = Snake()
