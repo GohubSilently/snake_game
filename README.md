@@ -1,4 +1,4 @@
-# Snake Game — Игра «Змейка» на Pygame
+# Snake Game — Игра «Змейка» на Pygame.
 
 [![Python](https://img.shields.io/badge/-Python_3.13-3771a1?style=flat&logo=Python&logoColor=ffffff)](https://www.python.org/)
 [![Pygame](https://img.shields.io/badge/-Pygame_2.6-2b2b2b?style=flat&logo=python&logoColor=ffffff)](https://www.pygame.org/)
