@@ -2,7 +2,7 @@ from random import choice
 
 import pygame as pg
 
-from constants import (
+from constants import (  # noqa: F401
     ALL_CELLS,
     APPLE_COLOR,
     BOARD_BACKGROUND_COLOR,
@@ -36,6 +36,8 @@ clock = pg.time.Clock()
 
 
 class GameObject:
+    """Родительский класс любого объекта на игоровом поле."""
+
     def __init__(
         self,
         body_color=None
@@ -46,6 +48,7 @@ class GameObject:
     def draw(
         self
     ):
+        """Переопределяется в дочерних классах."""
         raise NotImplementedError(
             f'Метод draw() не выполняется в {type(self).__name__}'
         )
@@ -55,6 +58,7 @@ class GameObject:
         position,
         body_color=None
     ):
+        """Отрисовка одной кретки."""
         body_color = body_color or self.body_color
         rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, body_color, rect)
@@ -63,6 +67,8 @@ class GameObject:
 
 
 class Apple(GameObject):
+    """Дочерний класс - Яблоко."""
+
     def __init__(
         self,
         occupied_cells=CENTRAL_CELL,
@@ -75,15 +81,19 @@ class Apple(GameObject):
         self,
         occupied_cells
     ):
+        """Определяет позицию после того как объект был съеден."""
         self.position = choice(tuple(ALL_CELLS - set(occupied_cells)))
 
     def draw(
         self
     ):
+        """Отрисовка яблока."""
         self.draw_one_cell(self.position)
 
 
 class Snake(GameObject):
+    """Дочерний класс - Змея."""
+
     def __init__(
         self,
         body_color=SNAKE_COLOR
@@ -94,11 +104,13 @@ class Snake(GameObject):
     def get_head_position(
         self
     ):
+        """Определяет позицию головы."""
         return self.positions[0]
 
     def reset(
         self
     ):
+        """Обнуление до первоночального сосотояния."""
         self.length = 1
         self.direction = choice([UP, DOWN, RIGHT, LEFT])
         self.positions = [CENTRAL_CELL]
@@ -108,6 +120,7 @@ class Snake(GameObject):
         self,
         new_position
     ):
+        """Определяет направление."""
         if (
             new_position[0] != -self.direction[0]
             and new_position[1] != -self.direction[1]
@@ -117,6 +130,7 @@ class Snake(GameObject):
     def move(
         self
     ):
+        """Движение."""
         head_x, head_y = self.get_head_position()
         head_movement_x, head_movement_y = self.direction
 
@@ -134,12 +148,14 @@ class Snake(GameObject):
     def draw(
         self
     ):
+        """Отрисовка змейки."""
         self.draw_one_cell(self.get_head_position())
         if self.last:
             self.draw_one_cell(self.last, BOARD_BACKGROUND_COLOR)
 
 
 def handle_keys(snake):
+    """Управление игрой."""
     for event in pg.event.get():
         if (
             event.type == pg.QUIT
@@ -154,6 +170,7 @@ def handle_keys(snake):
 
 
 def main():
+    """Основная функция игры."""
     pg.init()
 
     snake = Snake()
