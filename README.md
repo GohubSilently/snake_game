@@ -11,7 +11,7 @@
 - [Описание](#описание)
 - [Игровая механика](#игровая-механика)
 - [Основные технологии](#основные-технологии)
-- [Запуск проекта](#запуск-проекта)
+- [Запуск проекта](#запуск-проекта-локально)
 - [Управление](#управление)
 
 ---
@@ -40,7 +40,7 @@
 
 ---
 
-## Запуск проекта
+## Запуск проекта локально
 1. Клонируем репозиторий.
 ```bash
 git clone https://github.com/GohubSilently/snake_game && cd snake_game
@@ -52,9 +52,15 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip && pip install -r requirements.txt
 ```
 
-3. Инициализируем проект.
+3. Запускаем проект.
 ```bash
 python snake.py
+```
+
+4. Проверяем тесты и стилистику.
+```
+flake8 constants.py && flake8 snake.py
+pytest
 ```
 
 ---
